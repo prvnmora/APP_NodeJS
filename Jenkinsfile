@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = "prvnmora/simple-app"
+        //IMAGE_NAME = "prvnmora/simple-app"
         AWS_REGION = "us-east-1"
     }
     stages {
