@@ -5,6 +5,11 @@ pipeline {
         AWS_REGION = "us-east-1"
     }
     stages {
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
         stage('Clone Repository') {
             steps {
                checkout changelog: false, poll: false, scm: scmGit(branches: [[name: '*/main']], extensions: [], 
