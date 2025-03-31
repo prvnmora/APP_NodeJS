@@ -21,13 +21,30 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
-        stage('Push to Docker Hub') {
+         stage('Login to Docker Hub') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://hub.docker.com/repositories/prvnmora']) {
-                    sh 'docker push $IMAGE_NAME'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                    }
                 }
             }
         }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh "docker push ${IMAGE_NAME}"
+                }
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh "docker rmi ${IMAGE_NAME}"
+            }
+        }
+        
         /*stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl apply -f k8s/deployment.yaml'
