@@ -1,5 +1,5 @@
 pipeline {
-    agent master
+    agent any
     environment {
         //IMAGE_NAME = "prvnmora/simple-app"
         AWS_REGION = "us-east-1"
