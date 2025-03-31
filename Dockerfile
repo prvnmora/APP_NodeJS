@@ -1,11 +1,17 @@
-# Use the official Nginx image as the base image
-FROM nginx:alpine
+# Use a lightweight Python image
+FROM python:3.10-alpine
 
-# Copy the static website files to the Nginx HTML directory
-COPY ./public /usr/share/nginx/html
+# Set the working directory inside the container
+WORKDIR /app
 
-# Expose port 80 for web traffic
-EXPOSE 80
+# Copy application files
+COPY . .
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose port 5000 for the application
+EXPOSE 5000
+
+# Command to run the Flask application using Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
